@@ -2,9 +2,186 @@
 @model IndexModel
 @{
     ViewData["Title"] = "Home page";
+
+
+
+    IEnumerable<List<T>> SplitList<T>(List<T> locations)
+    {
+        if (locations == null)
+        {
+            yield return new List<T>();
+            yield break;
+        }
+
+        var nSize = Convert.ToInt32(Math.Ceiling(locations.Count / 10.0));
+        for (int i = 0; i < locations.Count; i += nSize)
+        {
+            yield return locations.GetRange(i, Math.Min(nSize, locations.Count - i));
+        }
+    }
+    var transcriptionDetailsList = SplitList(Model.TranscriptionDetails).ToArray();
 }
 
 <div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://docs.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
+    <h1 class="display-4">Convert Audio to Text</h1>
+    <p>
+        <strong> Artificial Intelligence Speech to text model</strong><br />
+        Upload a .wav file and it gets transcribed to text ready to be edited.
+    </p>
+    <form method="post" enctype="multipart/form-data">
+        <label>Create Pool</label>
+        <select name="CreatePool">
+            <option>False</option>
+            <option>True</option>
+        </select>
+        <br /><span></span>
+        <input type="file" name="FileToUpload" />
+        <button class="btn btn-success" type="submit">Submit</button>
+    </form>
+    <br />
+    @if (ViewBag.RecordId == null)
+    {
+        <div class="card">
+            <div class="card-body">
+                <table class="table table-bordered table-hover table-responsive-sm table-striped">
+                    <thead>
+                        <tr>
+                            <th>UploadedDate</th>
+                            <th>FileName</th>
+                            <th>Status</th>
+                            <th>Submission to Start</th>
+                            <th>Task start to end</th>
+                            <th>Transcript</th>
+                            <th></th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var item in Model.UpdatedRequests)
+                        {
+                        <tr>
+                            <td>@item.Timestamp.ToLocalTime().ToString("MM/dd/yyyy hh:mm tt")</td>
+                            <td><a href="@item.InputUri" target="_blank">@item.FileNameDisplay</a></td>
+                            <td>@item.Status</td>
+                            <td>@item.SubmissionToStart</td>
+                            <td>@item.StartToEnd</td>
+                            <td><a class="btn btn-primary" href="~/?id=@(item.RowKey)&fileName=@(item.FileName)">Transcript</a></td>
+                            <td>
+                                <a href="~/?id=@(item.RowKey)&showLog=true" class="btn btn-info">Logs</a>
+                            </td>
+                            <td>
+                                <a href="~/api/document/@(item.RowKey)" class="btn btn-sm btn-secondary">Doc</a>
+                            </td>
+
+                        </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    }
+    else if (ViewBag.ShowLog != null && ViewBag.ShowLog)
+    { 
+        <div class="card">
+            <div class="card-body">
+                <a href="~/api/document/@(ViewBag.RecordId)" class="btn btn-primary">Document</a>
+
+                <table class="table table-bordered table-hover table-responsive-sm table-striped">
+                    <thead>
+                        <tr>
+                            <th>Time</th>
+                            <th>Message</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var item in Model.LogMessages)
+                        {
+                            <tr>
+                                <td>@item.Timestamp.ToLocalTime().ToString("MM/dd/yyyy HH:mm:ss")</td>
+                                <td>@item.LogMessage</td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    }
+    else
+    {
+        <div class="card">
+            <div class="card-header">Check for Status</div>
+            <div class="card-body">
+
+                <audio id="Test_Audio" style="width:500px;"
+                       controls src="~/api/audio/@(ViewBag.FileName)"
+                       type="audio/wav"></audio>
+                <a href="~/?id=@(ViewBag.RecordId)&showLog=true" class="btn btn-info">Logs</a>
+                <a href="~/api/document/@(ViewBag.RecordId)" class="btn btn-primary">Document</a>
+
+                <div class="accordion" id="accordionExample">
+                    @for (int i = 0; i < transcriptionDetailsList.Length; i++)
+                    {
+                        <div class="card">
+                            <div class="card-header" id="heading@(i)">
+                                <h2 class="mb-0">
+                                    <button class="btn btn-link" type="button" data-toggle="collapse" data-target="#collapse@(i)" aria-expanded="false" aria-controls="collapse@(i)">
+                                        Transcript from @($"{ transcriptionDetailsList[i].First().StartTimeSpanString} " +
+$"to {transcriptionDetailsList[i].Last().StartTimeSpanString}")
+                                    </button>
+                                </h2>
+                            </div>
+                            <div id="collapse@(i)" class="collapse" aria-labelledby="heading@(i)" data-parent="#accordionExample">
+                                <div class="card-body">
+                                    <table class="table table-bordered table-responsive-sm table-hover table-striped">
+                                        <thead>
+                                            <tr>
+                                                <th>Sentence</th>
+                                                <th>Duration</th>
+                                                <th>StartTime</th>
+                                                <th></th>
+                                            </tr>
+                                        </thead>
+                                        <tbody id="UpdateTable">
+                                            @foreach (var item in transcriptionDetailsList[i])
+                                            {
+                                                <tr>
+                                                    <td>@item.Sentence</td>
+                                                    <td>@(item.DurationTimeSpanString)</td>
+                                                    <td>@(item.StartTimeSpanString)</td>
+                                                    <td>
+                                                        <button data-time="@(item.StartTimeSpan.TotalSeconds)"
+                                                                class="playBtn btn btn-sm btn-success">
+                                                            Play
+                                                        </button>
+                                                    </td>
+                                                </tr>
+
+                                            }
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+    }
 </div>
+@section Scripts{
+    <script type="text/javascript">
+        $(document).ready(function () {
+            // var recordId = ViewBag.RecordId;
+
+
+            $('.playBtn').click(function () {
+                var time = $(this).data('time');
+
+                var audio = $('audio').get(0);
+                audio.currentTime = time;
+                //Uncomment the line above this one.
+                audio.play();
+            })
+        });
+    </script>
+}

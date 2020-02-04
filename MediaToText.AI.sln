@@ -3,7 +3,13 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
 VisualStudioVersion = 15.0.28307.757
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MediaToText.AI", "MediaToText.AI\MediaToText.AI.csproj", "{73339637-D66F-4932-B6B1-F311F738E568}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MediaToText.AI", "MediaToText.AI\MediaToText.AI.csproj", "{73339637-D66F-4932-B6B1-F311F738E568}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MediaToText.AI.Service", "MediaToText.AI.Service\MediaToText.AI.Service.csproj", "{B721DAF1-15D9-4FD3-814A-3CD6AF163FCB}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MediaToText.AI.Business", "MediaToText.AI.Business\MediaToText.AI.Business.csproj", "{1B85F133-0510-4E42-A9D4-33256B961992}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MediaToText.AI.ServiceTest", "MediaToText.AI.ServiceTest\MediaToText.AI.ServiceTest.csproj", "{8671C2A0-B16E-4564-A0A8-20E90E8828AE}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -15,6 +21,18 @@ Global
 		{73339637-D66F-4932-B6B1-F311F738E568}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{73339637-D66F-4932-B6B1-F311F738E568}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{73339637-D66F-4932-B6B1-F311F738E568}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B721DAF1-15D9-4FD3-814A-3CD6AF163FCB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B721DAF1-15D9-4FD3-814A-3CD6AF163FCB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B721DAF1-15D9-4FD3-814A-3CD6AF163FCB}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B721DAF1-15D9-4FD3-814A-3CD6AF163FCB}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1B85F133-0510-4E42-A9D4-33256B961992}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1B85F133-0510-4E42-A9D4-33256B961992}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1B85F133-0510-4E42-A9D4-33256B961992}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1B85F133-0510-4E42-A9D4-33256B961992}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8671C2A0-B16E-4564-A0A8-20E90E8828AE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8671C2A0-B16E-4564-A0A8-20E90E8828AE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8671C2A0-B16E-4564-A0A8-20E90E8828AE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8671C2A0-B16E-4564-A0A8-20E90E8828AE}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

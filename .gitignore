@@ -240,6 +240,7 @@ FakesAssemblies/
 **/*.DesktopClient/ModelManifest.xml
 **/*.Server/GeneratedArtifacts
 **/*.Server/ModelManifest.xml
+**/*.json
 _Pvt_Extensions
 
 # Paket dependency manager
