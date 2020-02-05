@@ -85,6 +85,9 @@ namespace MediaToText.AI.Service
         static async Task ProcessAudio(string recordId, string fileName)
         {
             var source = new TaskCompletionSource<int>();
+            var outputPath = Path.Combine(Directory.GetCurrentDirectory(), "output.txt");
+            File.WriteAllText(outputPath, "");
+
             using (var audioInput = AudioConfig.FromWavFileInput(fileName))
             {
                 using (var basicRecognizer = new SpeechRecognizer(speechConfig, audioInput))
@@ -94,7 +97,8 @@ namespace MediaToText.AI.Service
                     {
                         if (!string.IsNullOrEmpty(e.Result.Text))
                         {
-                            await tableService.AddEntity(new TranscriptionDetail
+                            var task1 = File.AppendAllTextAsync(outputPath, e.Result.Text);
+                            var task2 = tableService.AddEntity(new TranscriptionDetail
                             {
                                 RowKey = Guid.NewGuid().ToString(),
                                 PartitionKey = recordId,
@@ -102,6 +106,7 @@ namespace MediaToText.AI.Service
                                 Sentence = e.Result.Text,
                                 StartTime = e.Result.OffsetInTicks.ToString()
                             });
+                            await Task.WhenAll(task1, task2);
                         }
                     };
                     basicRecognizer.Canceled += (sender, e) =>

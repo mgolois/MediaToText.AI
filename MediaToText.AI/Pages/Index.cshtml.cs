@@ -116,14 +116,14 @@ namespace MediaToText.AI.Pages
             task.UserIdentity = new UserIdentity(new AutoUserSpecification(elevationLevel: ElevationLevel.Admin, scope: AutoUserScope.Pool));
             task.OutputFiles = new List<OutputFile>
             {
-                new OutputFile(@"*.wav",
+                new OutputFile(@"output.txt",
                               new OutputFileDestination(new OutputFileBlobContainerDestination(containerUrl, task.Id)),
                               new OutputFileUploadOptions(OutputFileUploadCondition.TaskCompletion)),
-
+                new OutputFile(@"..\std*.txt",
+                              new OutputFileDestination(new OutputFileBlobContainerDestination(containerUrl, task.Id)),
+                              new OutputFileUploadOptions(OutputFileUploadCondition.TaskCompletion)),
             };
-                //new OutputFile(@"..\stdout.txt",
-                //              new OutputFileDestination(new OutputFileBlobContainerDestination(containerUrl, task.Id)),
-                //              new OutputFileUploadOptions(OutputFileUploadCondition.TaskCompletion)),
+                
             return task;
         }
 
